@@ -1,0 +1,7 @@
+* { margin: 0; padding: 0; border: none; list-style: none;}
+a{ text-decoration: none; color: black;}
+
+
+.logo { width: 274px; height: 72px; border-radius: 35px 0 0 0; }
+.banner{ width: 950px; height:500px; margin-left: 208px; background: yellow; }
+#contents{ width: 100%; margin: 0 auto; border-bottom: 5px solid #3399CC; background: #f3f3f3;}

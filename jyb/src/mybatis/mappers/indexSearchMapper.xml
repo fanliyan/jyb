@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace自定义名称，必须唯一，为了保证唯一，一般与文件同名 -->
+<mapper namespace="indexSearchMapper">
+     <select id="selectonsite" parameterType="map" resultType="map">
+           SELECT
+				*
+			FROM
+				(
+					SELECT
+						id,
+						title,
+						"毕业须知" category,
+						"article" tablename,
+						time
+					FROM
+						article
+					WHERE
+						title LIKE #{title}"%"
+					UNION ALL
+						SELECT
+							tid id,
+							title,
+							"就业信息",
+							"jiuye",
+							time
+						FROM
+							jiuye
+						WHERE
+							title LIKE #{title}"%"
+						UNION ALL
+							SELECT
+								partid id,
+								parttitle title,
+								"往期报纸",
+								"newspaperpart",
+								uploadtime time
+							FROM
+								newspaperpart
+							WHERE
+								parttitle LIKE #{title}"%"
+							UNION ALL
+								SELECT
+									tid id,
+									title,
+									"加油实习生",
+									"trainee",
+									time
+								FROM
+									trainee
+								WHERE
+									title LIKE #{title}"%"
+				) a
+			ORDER BY 
+				 time desc,
+				 id
+			 limit 
+                 #{turnPage.startNum}, 
+                 #{turnPage.rowInOnePage}; 
+     </select>
+     
+     <select id="getselectonsiteTotal" parameterType="map" resultType="long">
+     		SELECT
+				count(id)
+			FROM
+				(
+					SELECT
+						id,
+						title,
+						"毕业须知" category,
+						"article" tablename,
+						time
+					FROM
+						article
+					WHERE
+						title LIKE #{title}"%"
+					UNION ALL
+						SELECT
+							tid id,
+							title,
+							"就业信息",
+							"jiuye",
+							time
+						FROM
+							jiuye
+						WHERE
+							title LIKE #{title}"%"
+						UNION ALL
+							SELECT
+								partid id,
+								parttitle title,
+								"往期报纸",
+								"newspaperpart",
+								uploadtime time
+							FROM
+								newspaperpart
+							WHERE
+								parttitle LIKE #{title}"%"
+							UNION ALL
+								SELECT
+									tid id,
+									title,
+									"加油实习生",
+									"trainee",
+									time
+								FROM
+									trainee
+								WHERE
+									title LIKE #{title}"%"
+				) a
+     </select>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="xrcNewspaperMapper">
+
+	<select id="toNewspaperEditionnum" resultType="map" parameterType="string">  
+	select newspaperid,editionnum,creattime from xrcnewspaper 
+	order by editionnum
+	</select>
+	
+	<select id="toNewspaperPagenum" resultType="map">
+	select * from xrcnewspaperedition 
+	where
+	newspaperid = #{newspaperid}
+	order by pagenum
+	</select>
+
+	<select id="showNewspaper" resultType="map">
+	select * from xrcnewspaper order by editionnum desc limit #{turnPage.startNum},#{turnPage.rowInOnePage}
+	</select>
+
+	<select id="selectEditionnum" resultType="map">
+	select newspaperid,editionnum from xrcnewspaper order by editionnum desc
+	</select>
+	
+	<select id="queryEditionnum" resultType="map">
+	select newspaperid from xrcnewspaper where editionnum = #{editionnum}
+	</select>
+	
+	<select id="queryPagenum" parameterType="map" resultType="map">
+	select editionid,imgname from xrcnewspaperedition where pagenum = #{pagenum} and newspaperid = #{newspaperid}
+	</select>
+	
+	<select id="queryEditionPagenum" resultType="map">
+	select editionnum,pagenum from xrcnewspaper,xrcnewspaperedition,xrcnewspaperpart where xrcnewspaper.newspaperid = xrcnewspaperedition.newspaperid and xrcnewspaperedition.editionid = xrcnewspaperpart.editionid and xrcnewspaperpart.partid = #{partid}
+	</select>
+	
+	<select id="queryPart" resultType="map">
+	select partid,t,l,h,w from xrcnewspaperpart where editionid = #{editionid}
+	</select>
+	
+	<select id="queryPartContent" resultType="map">
+	select xrcnewspaperpart.parttitle,xrcnewspaperpart.content,xrcnewspaperpart.uploadtime,xrcnewspaperpart.hits,admin.name from xrcnewspaperpart,admin where xrcnewspaperpart.partid = #{partid} and xrcnewspaperpart.aid = admin.aid
+	</select>
+	
+	<select id="queryPartSynopsis" resultType="map">
+	select partid,t,l,h,w,parttitle from xrcnewspaperpart where editionid = #{editionid}
+	</select>
+
+	<insert id="insertNewspaperPart" parameterType="map">
+	insert into xrcnewspaperpart (partid,editionid,t,l,h,w,hits,aid) value (#{partid},#{editionid},#{t},#{l},#{h},#{w},0,#{aid})
+	</insert>
+	
+	<update id="updateNewspaperPart" parameterType="map">
+	update xrcnewspaperpart set parttitle=#{parttitle},content=#{content},uploadtime=#{uploadtime},aid=#{aid} where partid=#{partid}
+	</update>
+	
+	<update id="updatePartHits">
+	update xrcnewspaperpart set hits=hits+1 where partid=#{partid}
+	</update>
+	
+	<update id="updateNewspaperFirstimg" parameterType="map">
+	update xrcnewspaper set firstimg=#{imgname} where newspaperid=#{newspaperid}
+	</update>
+
+	<insert id="insertNewspaperEdition" parameterType="map">
+	insert into xrcnewspaperedition (editionid,newspaperid,pagenum,pagetitle,imgname,aid) value (#{editionid},#{newspaperid},#{pagenum},#{pagetitle},#{imgname},#{aid})
+	</insert>
+	
+	<insert id="insertNewspaper" parameterType="map">
+	insert into xrcnewspaper (newspaperid,editionnum,creattime) value (#{newspaperid},#{editionnum},#{creattime})
+	</insert>
+	
+	<update id="updateNewspaperEdition" parameterType="map">
+	update xrcnewspaperedition set pagetitle=#{pagetitle} where editionid=#{editionid}
+	</update>
+</mapper> 

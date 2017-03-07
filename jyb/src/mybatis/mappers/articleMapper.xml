@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- namespace自定义名称，必须唯一，为了保证唯一，一般与文件同名 -->
+<mapper namespace="articleMapper">
+	<!--
+		resultType="map"：定义返回的数据类型是HashMap,如果调用的是selectList(),list里的元素是map，map中的key是列名
+		collection 集合；item:当前的元素，第一次循环代表第一个元素，一次类推；open:开始的符号
+		separator：分隔符；close ：结束的符号
+	-->
+
+	<select id="selectArtitleTitleList" parameterType="map"
+		resultType="map">
+		select * from article
+		<where>
+			<if test="title!=null and title!=''">
+				and title like #{title}"%"
+			</if>
+		</where>
+		order by toptime desc,time desc
+		limit
+		#{turnPage.startNum},#{turnPage.rowInOnePage}
+	</select>
+	<select id="queryCountArticlePage" parameterType="map"
+		resultType="long">
+		select count(id) from article
+		<where>
+			<if test="title!=null and title!=''">
+				and title like #{title}"%"
+			</if>
+		</where>
+	</select>
+
+	<select id="queryArticleSome" parameterType="map" resultType="map">
+		select * from article order by toptime desc,time desc limit 0,10
+	</select>
+
+	<select id="selectArtitleById" parameterType="map" resultType="map">
+		select article.*, admin.name from article, admin where article.id=#{id} and article.aid = admin.aid;
+	</select><!--
+
+	<select id="selectArtitleByKeyWord" parameterType="map"
+		resultType="map">
+		select * from article where keyword=#{keyword}
+	</select>
+
+	--><insert id="insertArticle" parameterType="map">
+		insert into article
+		(id,title,connect,keyword,status_0_1,time,aid) values(
+		#{id},
+		#{title},
+		#{connect},
+		#{keyword},
+		#{status_0_1},
+		#{time},
+		#{aid}
+		)
+	</insert>
+
+	<update id="updateArticleViewNum" parameterType="String">
+             update article set view_num = view_num + 1 where id = #{id}
+    </update>
+    
+	<update id="updateArticleStatus_0_1" parameterType="map">
+		update article
+		<set>
+			<if test="_parameter != null">
+				status_0_1 = 1,
+			</if>
+			<if test="toptime = '' ">
+				toptime = NOW(),
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="updateArticleStatus_1_0" parameterType="map">
+		update article
+		<set>
+			<if test="_parameter != null">
+				status_0_1 = 0,
+			</if>
+			<if test="toptime = '' ">
+				toptime = 0,
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="updateArticle" parameterType="map"><!-- 更新多条数据 -->
+		update article
+		<set><!-- set 标签，处理多余的逗号 -->
+			<if test="keytitle!=null">
+				title=#{keytitle},
+			</if>
+			<if test="keyconnect!=null">
+				connect=#{keyconnect},
+			</if>
+			<if test="aid!=null">
+				aid=#{aid}
+			</if>
+		</set>
+		where id=#{keyid}
+	</update>
+
+	<delete id="deleteArticleById" parameterType="map">
+		delete from article
+		<where><!-- 谨慎使用<where>标签，会导致删除真个表的数据 -->
+			<if test="_parameter !=null and _parameter !='' ">
+				id=#{id}<!-- 前为数据库字段，后随意，但要和paraMap 里的属性一样 -->
+			</if>
+		</where>
+	</delete>
+
+
+
+</mapper>

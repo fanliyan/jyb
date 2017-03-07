@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace自定义名称，必须唯一，为了保证唯一，一般与文件同名 -->
+<mapper namespace="messageMapper">
+	<!-- resultType="map"定义是返回的数据类型是HashMap，如果调用的是selectList(),list里的元素是map,map中key是列名 -->
+	
+	<!-- 查询全部留言 -->
+	<select id="selectMessage" resultType="map">
+		select * from message order by time desc
+	</select>	
+	<!-- 分页查询 -->	
+	<select id="selectMessageFenYe" parameterType="map" resultType="map">
+		select * from message order by time desc limit (#{start},#{end})
+	</select>
+	
+	
+	<select id="queryMessagePage" parameterType="map" resultType="map">
+	select * from message 
+	order by time desc ,mid
+	limit #{turnPage.startNum},#{turnPage.rowInOnePage}
+	</select>
+	
+	<select id="queryCountMessagePage" parameterType="map" resultType="long">
+	select count(mid) from message 
+	</select>
+	
+	
+	
+	
+	<!--添加留言	-->
+	<insert id="insertMessage" >
+	insert into message(mid,uid,name,time,connect) values(#{mid},#{uid},#{name},#{time},#{connect})
+	</insert>
+	
+	<delete id="deleteMessage">
+		delete from message where mid=#{mid}
+	</delete>
+	
+</mapper>

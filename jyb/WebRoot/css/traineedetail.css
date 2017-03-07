@@ -1,0 +1,63 @@
+/* CSS Document */
+body, ul, img, li, p, h2{
+	     margin:0px;
+		 padding:0px;
+		 list-style:none;
+}
+
+.out{
+	height:600px;
+	width:100%;
+/*	border:1px red solid;*/
+}
+.out .trainee_left img{
+	width:107px;
+	height:153px;
+	
+	/*border:1px red solid;*/
+}
+.trainee_left{
+	
+	margin-right:20px;
+	/*border:1px red solid;*/
+	float:left;
+}
+.out .trainee_right{
+	
+	width:700px;
+	/*border:1px green solid;*/
+	float:left;
+}
+.out .trainee_right .publisher{
+	width:90%;
+	height:30px;
+	color:white;
+	line-height: 30px;
+	background: #3399cc;
+	text-align: center;
+	margin-left:40px;
+	/*border:1px red solid;*/
+	float:left;
+}
+.out .trainee_right .time{
+	width:600px;
+	height:30px;
+	/*border:1px red solid;*/
+	float:left;
+}
+.out .trainee_right h2{
+  margin-bottom:10px;
+  text-align: center;
+  margin-top: 10px;	
+	}
+.out .trainee_right .content{
+	width:600px;
+	height:600px;
+	margin-top:70px;
+	/*border:1px black solid;*/
+}
+	
+
+
+
+

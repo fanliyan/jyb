@@ -1,0 +1,28 @@
+/* CSS Document */
+body, ul, img, li, p{
+	     margin:0px;
+		 padding:0px;
+		 list-style:none;
+}
+
+.out{
+	width:100%;
+}
+.in{
+	margin-top:40px;
+	margin-left:25px;
+	float:left;
+}
+.out  img{
+	width:107px;
+	height:153px;
+	margin-top: -10px;
+	
+}
+
+
+
+
+
+		 
+

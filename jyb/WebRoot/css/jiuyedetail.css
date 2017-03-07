@@ -1,0 +1,67 @@
+/* CSS Document */
+*{
+	margin: 0px;
+	padding:0px;
+}
+body, ul, img, li, p, h2{
+	     margin:0px;
+		 padding:0px;
+		 list-style:none;
+}
+
+.out{
+	height:620px;
+	width:100%;
+/*	border:1px red solid;*/
+}
+.out .jiuye_left img{
+	width:200px;
+	height:200px;
+	/*border:1px red solid;*/
+}
+.jiuye_left{
+	width:200px;
+	
+	margin-right:20px;
+	/*border:1px red solid;*/
+	float:left;
+}
+.out .jiuye_right{
+	height:00px;
+	width:700px;
+	/*border:1px green solid;*/
+	float:left;
+}
+.out .jiuye_right .publisher{
+	width:90%;
+	height:30px;
+	color:white;
+	line-height: 30px;
+	margin-left:40px;
+	background: #3399cc;
+	text-align: center;
+	/*border:1px red solid;*/
+	float:left;
+}
+.out .jiuye_right .time{
+	width:600px;
+	height:30px;
+	/*border:1px red solid;*/
+	float:left;
+}
+.out .jiuye_right h2{
+  margin-bottom:10px;
+  text-align: center;
+  margin-top: 10px;	
+	}
+.out .jiuye_right .content{
+	width:600px;
+	height:500px;
+	margin-top:70px;
+	/*border:1px black solid;*/
+}
+	
+
+
+
+

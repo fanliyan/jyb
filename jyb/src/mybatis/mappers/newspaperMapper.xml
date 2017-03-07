@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="newspaperMapper">
+
+	<select id="toNewspaperEditionnum" resultType="map" parameterType="string">  
+	select newspaperid,editionnum,creattime from newspaper 
+	order by editionnum
+	</select>
+	
+	<select id="toNewspaperPagenum" resultType="map">
+	select * from newspaperedition 
+	where
+	newspaperid = #{newspaperid}
+	order by pagenum
+	</select>
+
+	<select id="showNewspaper" resultType="map">
+	select * from newspaper order by editionnum desc limit #{turnPage.startNum},#{turnPage.rowInOnePage}
+	</select>
+
+	<select id="selectEditionnum" resultType="map">
+	select newspaperid,editionnum from newspaper order by editionnum desc
+	</select>
+	
+	<select id="queryEditionnum" resultType="map">
+	select newspaperid from newspaper where editionnum = #{editionnum}
+	</select>
+	
+	<select id="queryPagenum" parameterType="map" resultType="map">
+	select editionid,imgname from newspaperedition where pagenum = #{pagenum} and newspaperid = #{newspaperid}
+	</select>
+	
+	<select id="queryEditionPagenum" resultType="map">
+	select editionnum,pagenum from newspaper,newspaperedition,newspaperpart where newspaper.newspaperid = newspaperedition.newspaperid and newspaperedition.editionid = newspaperpart.editionid and newspaperpart.partid = #{partid}
+	</select>
+	
+	<select id="queryPart" resultType="map">
+	select partid,t,l,h,w from newspaperpart where editionid = #{editionid}
+	</select>
+	
+	<select id="queryPartContent" resultType="map">
+	select newspaperpart.parttitle,newspaperpart.content,newspaperpart.uploadtime,newspaperpart.hits,admin.name from newspaperpart,admin where newspaperpart.partid = #{partid} and newspaperpart.aid = admin.aid
+	</select>
+	
+	<select id="queryPartSynopsis" resultType="map">
+	select partid,t,l,h,w,parttitle from newspaperpart where editionid = #{editionid}
+	</select>
+
+	<insert id="insertNewspaperPart" parameterType="map">
+	insert into newspaperpart (partid,editionid,t,l,h,w,hits,aid) value (#{partid},#{editionid},#{t},#{l},#{h},#{w},0,#{aid})
+	</insert>
+	
+	<update id="updateNewspaperPart" parameterType="map">
+	update newspaperpart set parttitle=#{parttitle},content=#{content},uploadtime=#{uploadtime},aid=#{aid} where partid=#{partid}
+	</update>
+	
+	<update id="updatePartHits">
+	update newspaperpart set hits=hits+1 where partid=#{partid}
+	</update>
+	
+	<update id="updateNewspaperFirstimg" parameterType="map">
+	update newspaper set firstimg=#{imgname} where newspaperid=#{newspaperid}
+	</update>
+
+	<insert id="insertNewspaperEdition" parameterType="map">
+	insert into newspaperedition (editionid,newspaperid,pagenum,pagetitle,imgname,aid) value (#{editionid},#{newspaperid},#{pagenum},#{pagetitle},#{imgname},#{aid})
+	</insert>
+	
+	<insert id="insertNewspaper" parameterType="map">
+	insert into newspaper (newspaperid,editionnum,creattime) value (#{newspaperid},#{editionnum},#{creattime})
+	</insert>
+	
+	<update id="updateNewspaperEdition" parameterType="map">
+	update newspaperedition set pagetitle=#{pagetitle} where editionid=#{editionid}
+	</update>
+	
+</mapper> 

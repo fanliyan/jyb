@@ -1,0 +1,31 @@
+#showAll{
+	width: 620px;
+	margin-top:10PX;
+	margin-left:40px;
+}
+#title{
+	width: 400px;
+	height: 500px;
+	float: left;
+	border: 1px solid red;
+}
+#handle{
+	width: 196px;
+	height: 500px;
+	float: right;
+	border: 1px solid red;
+}
+table{
+	width: 620px;
+	font-size: 12px;
+}
+
+#t1{
+	width: 200px;
+}
+#t2{
+	width: 100px
+}
+#t3{
+	width: 200px
+}

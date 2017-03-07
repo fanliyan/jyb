@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="traineeMapper">
+   
+         
+         <select id="selectTraineeLimit" parameterType="map" resultType="map">
+                 select 
+	                 trainee.tid, 
+	                 admin.name aname, 
+	                 trainee.name tname, 
+	                 trainee.major, 
+	                 trainee.time, 
+	                 trainee.title, 
+	                 trainee.view_num 
+                 from 
+                 	trainee, admin 
+                 <where>
+                 	<if test="title != null and title != ''">
+                 	   and trainee.title like concat('%',#{title},'%')
+                 	</if>                
+                 	   and trainee.aid = admin.aid
+                 </where> 
+                 order by 
+                 	trainee.time desc, trainee.tid                
+                 limit 
+                 	#{firstPage}, 
+                 	#{rows}; 
+         </select>
+         
+         <select id="getTraineeTotal" parameterType="map" resultType="long">
+                select count(tid) from trainee
+                <where>
+	                 	<if test="title != null and title != ''">
+	                 	   and trainee.title like concat('%',#{title},'%')
+	                 	</if>
+	                 	<if test="name != null and name != ''">
+         					and name like concat('%',#{name},'%')
+         				</if>
+         				<if test="major != null and major != ''">
+         					and major like concat('%',#{major},'%')
+         				</if>
+         				<if test="city != null and city != ''">
+         					and city like concat('%',#{city},'%')
+         				</if>
+         				<if test="company != null and company != ''">
+         					and company like concat('%',#{company},'%')
+         				</if>
+         				<if test="title != null and title != ''">
+         					and title like concat('%',#{title},'%')
+         				</if>  
+                </where>                
+         </select>
+         
+         <select id="selectOneTrainee" parameterType="String" resultType="Trainee">
+               select trainee.*, admin.name aname from trainee, admin  where trainee.tid = #{tid} and trainee.aid = admin.aid;
+         </select>
+         
+         <select id="selectTraineeLike" parameterType="map" resultType="map">
+         		select * from trainee 
+         		<where>
+         				<if test="name != null and name != ''">
+         					and name like concat('%',#{name},'%')
+         				</if>
+         				<if test="major != null and major != ''">
+         					and major like concat('%',#{major},'%')
+         				</if>
+         				<if test="city != null and city != ''">
+         					and city like concat('%',#{city},'%')
+         				</if>
+         				<if test="company != null and company != ''">
+         					and company like concat('%',#{company},'%')
+         				</if>
+         				<if test="title != null and title != ''">
+         					and title like concat('%',#{title},'%')
+         				</if>
+         		</where>
+         		 order by 
+                 	trainee.time desc, trainee.tid                
+                 limit 
+                 	#{turnPage.startNum}, 
+                 	#{turnPage.rowInOnePage}; 
+         </select>
+         
+         <insert id="insertTrainee" parameterType="Trainee">
+         		insert into trainee (tid, aid, time, name, major, city, company, photo, title, connect) values 
+         		(
+         		  #{tid},
+         		  #{aid},
+         		  #{time},
+         		  #{name},
+         		  #{major},
+         		  #{city},
+         		  #{company},
+         		  #{photo},
+         		  #{title},
+         		  #{connect}
+         		);
+         </insert>
+         
+         <update id="updateViewNum" parameterType="String">
+             update trainee set view_num = view_num + 1 where tid = #{tid}
+         </update>
+         
+         <update id="updateOneTrainee" parameterType="Trainee">
+              update trainee 
+              <set>
+              		<if test="title != null">
+              		   title = #{title},
+              		</if>
+              		<if test="name != null">
+              		    name = #{name},
+              		</if>
+              		<if test="major != null">
+              			major = #{major},
+              		</if>
+              		<if test="company != null">
+              		     company = #{company},
+              		</if>
+              		<if test="photo != null">
+              		     photo = #{photo},
+              		</if>
+              		<if test="city != null">
+              		     city = #{city},
+              		</if>
+              		<if test="connect != null">
+              		   	connect = #{connect},
+              		</if>  
+              		<if test="aid != null">
+              		   	aid = #{aid}
+              		</if>              		
+              </set> 
+	              where 
+	              	tid = #{tid}
+         </update>
+         
+         <delete id="deleteTrainee" parameterType="List">
+         		delete from trainee where tid in
+         		<foreach collection="list" item="ids" open="(" separator="," close=")">
+         			#{ids}
+         		</foreach>
+         </delete>
+</mapper>

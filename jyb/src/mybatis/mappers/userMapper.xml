@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace自定义名称，必须唯一，为了保证唯一，一般与文件同名 -->
+<mapper namespace="userMapper">
+	<!-- resultType="name" 定义是返回的数据类型是Hashmap,如果调用的是selectList（）,list里的元素是map，map中的keys是列名 -->
+<select id="selectUser" resultType="map">
+      select * from admin where id in
+      <!--  collection 集合 -->
+      <!--  item 当前元素，第一次循环代表一个元素，以此类推 -->
+      <!-- open 开始的符号 ， -->
+      <!-- separator :分隔符 -->
+      <foreach collection="array" item="item" open="(" separator="," close=")">
+      #{item}
+      </foreach>
+</select>
+<select id="selectUserWhere1" resultType="map">
+select * from user where name=#{name}
+</select>
+<select id="selectUserWhere2" resultType="map">
+select * from admin where name=#{name}
+</select>
+<select id="selectUserWhereD" parameterType="map" resultType="map">
+select id,name,password as pwd  from admin where name=#{keyname} and password=#{keypsd}
+</select>
+<!-- ognl表达式 -->
+<select id="selectUserWhereduo" parameterType="map" resultType="map">
+select  *  from file1
+<!-- 谨慎使用where，若一个条件没有，相当于全表查询，数据量很大，或者数据库不响应 -->
+
+<where>
+<if test="area!=null and area!=''  ">
+and area1=#{area}
+</if>
+<if test="type!=null and type!=''  ">
+and type1=#{type}
+</if>
+<if test="status!=null and status!='' ">
+ and status=#{status}
+</if>
+</where>
+
+</select>
+
+<insert id="insertUser" parameterType="map">
+insert into user(uid,name,email,password,phone,status)values(
+#{aid},
+#{name},
+#{email},
+#{password},
+#{phone},
+#{status}
+)
+</insert>
+
+<delete id="deleteuserbyid" >
+delete from file1
+<!-- 谨慎使用<where>标签，会导致删除整个表的数据 -->
+<where>   <!-- 处理多余的and -->
+<if test=" id!=null and id!='' ">
+id=#{id}
+</if>
+</where>
+</delete>
+
+<update id="updatesingle" parameterType="map"  >
+update file1
+set 
+area1=#{area}
+where 
+id=#{id}
+</update>
+
+<update id="updatedouble" >
+update file1
+<!-- <set>处理多余的逗号 -->
+<set>
+<if test="area!=null ">
+area1=#{area},
+</if>
+<if test="type!=null">
+type1=#{type},
+</if>
+<if test="status!=null">
+status=#{status},
+</if>
+</set>
+where 
+id=#{id}
+
+</update>
+<update id="updatetrainee" >
+update file1
+<!-- <set>处理多余的逗号 -->
+<set>
+<if test="area!=null ">
+area1=#{area},
+</if>
+<if test="type!=null">
+type1=#{type},
+</if>
+<if test="status!=null">
+status=#{status},
+</if>
+</set>
+where 
+id=#{id}
+
+</update>
+       <select id="selectTrainee" resultType="map">
+         		select * from trainee order by time desc;
+         </select>
+         
+         <select id="selectOneTrainee" parameterType="String" resultType="Trainee">
+               select * from trainee where tid = #{tid}
+         </select>
+         
+         <insert id="insertTrainee" parameterType="Trainee">
+         		insert into trainee (tid, aid, time, name, major, city, company, photo, title, connect) values 
+         		(
+         		  #{tid},
+         		  #{aid},
+         		  #{time},
+         		  #{name},
+         		  #{major},
+         		  #{city},
+         		  #{company},
+         		  #{photo},
+         		  #{title},
+         		  #{connect}
+         		);
+         </insert>
+<update id="updateview_num" >
+   update trainee set view_num=view_num+1  where   tid=#{tid}
+</update>
+
+<select id="queryUserPage" parameterType="map" resultType="map">
+	select tid,name,major,city,company,title,photo from trainee
+	<where> 
+	<if test="name!=null and name!=''">
+	and name like #{name}"%"  
+	</if>
+	<if test="major!=null and major!=''">
+	and major=#{major}  
+	</if>
+	<if test="city!=null and city!=''">
+	and city=#{city}  
+	</if>
+	<if test="compamy!=null and company!=''">
+	and company=#{company}  
+	</if>
+	<if test="title!=null and title!=''">
+	and title=#{title}  
+	</if>
+	</where>
+	order by status_0_1 desc,tid
+	limit #{turnPage.startNum},#{turnPage.rowInOnePage}
+	</select>
+	
+	
+	<select id="queryCountUserPage" parameterType="map" resultType="long">
+	select count(tid) from  trainee
+	<where> 
+	<if test="name!=null and name!=''">
+	and name like #{name}"%"  
+	</if>
+	<if test="major!=null and major!=''">
+	and major=#{major}  
+	</if>
+	<if test="city!=null and city!=''">
+	and city=#{city}  
+	</if>
+	<if test="compamy!=null and company!=''">
+	and company=#{company}  
+	</if>
+	<if test="title!=null and title!=''">
+	and title=#{title}  
+	</if>
+	</where>
+	order by status_0_1 desc,tid
+	</select>
+	
+	<delete id="deleteOneTrainee" parameterType="string" >
+delete from trainee
+<!-- 谨慎使用<where>标签，会导致删除整个表的数据 -->
+<where>   <!-- 处理多余的and -->
+<if test="_parameter!=null and _parameter!='' ">
+ tid=#{_parameter}
+</if>
+</where>
+</delete>
+
+ <select id="selectTraineeLimit" parameterType="map" resultType="map">
+                 select 
+	                 trainee.tid, 
+	                 admin.name aname, 
+	                 trainee.name tname, 
+	                 trainee.major, 
+	                 trainee.time, 
+	                 trainee.title, 
+	                 trainee.view_num 
+                 from 
+                 	trainee, admin 
+                 <where>
+                 	<if test="title != null and title != ''">
+                 	   and trainee.title like concat('%',#{title},'%')
+                 	</if>                
+                 	   and trainee.aid = admin.aid
+                 </where> 
+                 order by 
+                 	status_0_1 desc, trainee.tid                
+                 limit 
+                 	#{firstPage}, 
+                 	#{rows}; 
+         </select>
+         
+         <select id="getTraineeTotal" parameterType="map" resultType="Long">
+                select count(tid) from trainee
+                <where>
+                 	<if test="title != null and title != ''">
+                 	   and trainee.title like concat('%',#{title},'%')
+                 	</if>  
+                </where>
+         </select>
+         
+         
+         
+         <select id="selectTraineeLike" parameterType="map" resultType="map">
+         		select * from trainee 
+         		<where>
+         				<if test="name != null and name != ''">
+         					and name like concat('%',#{name},'%')
+         				</if>
+         				<if test="major != null and major != ''">
+         					and major like concat('%',#{major},'%')
+         				</if>
+         				<if test="city != null and city != ''">
+         					and city like concat('%',#{city},'%')
+         				</if>
+         				<if test="company != null and company != ''">
+         					and company like concat('%',#{company},'%')
+         				</if>
+         				<if test="title != null and title != ''">
+         					and title like concat('%',#{title},'%')
+         				</if>
+         		</where>
+         </select>
+         
+        
+         
+        
+         
+         <update id="updateOneTrainee">
+              update trainee 
+              <set>
+              		<if test="title != null">
+              		   title = #{title},
+              		</if>
+              		<if test="name != null">
+              		    name = #{name},
+              		</if>
+              		<if test="major != null">
+              			major = #{major},
+              		</if>
+              		<if test="company != null">
+              		     company = #{company},
+              		</if>
+              		<if test="city != null">
+              		     city = #{city},
+              		</if>
+              		<if test="connect != null">
+              		   	connect = #{connect}
+              		</if>              		
+              </set> 
+	              where 
+	              	tid = #{tid}
+         </update>
+         
+         <delete id="deleteTrainee" parameterType="List">
+         		delete from trainee where tid in
+         		<foreach collection="list" item="ids" open="(" separator="," close=")">
+         			#{ids}
+         		</foreach>
+         </delete>
+       
+<!-- 置顶数据 -->
+<update id="updateArticleStatus_0_1"  parameterType="List">
+		update trainee
+		<set>
+			<if test="_parameter != null">
+				status_0_1 = 1,
+			</if>
+			<if test="toptime = '' ">
+			toptime = NOW(),
+			</if> 
+		</set>
+		where tid in
+		<foreach collection="list" item="ids" open="(" separator="," close=")">
+         			#{ids}
+         		</foreach>
+	</update>
+
+	<update id="updateArticleStatus_1_0" parameterType="List">
+		update trainee
+		<set>
+			<if test="_parameter != null">
+				status_0_1 = 0,
+			</if>
+			<if test="toptime = '' ">
+			toptime = 0,
+			</if> 
+		</set>
+		where tid in
+		<foreach collection="list" item="ids" open="(" separator="," close=")">
+         			#{ids}
+         		</foreach>
+	</update>
+	
+	 <insert id="insertjiuye" parameterType="Trainee">
+         		insert into jiuye (tid, aid, time, title, connect) values 
+         		(
+         		  #{tid},
+         		  #{aid},
+         		  #{time},
+         		  #{title},
+         		  #{connect}
+         		);
+         </insert>
+
+
+
+<update id="updateview_numjy" >
+   update jiuye set view_num=view_num+1  where   tid=#{tid}
+</update>
+
+<select id="queryUserPagejiuye" parameterType="map" resultType="map">
+	select tid,title from jiuye
+	<where> 
+	
+	<if test="title!=null and title!=''">
+	and title=#{title}  
+	</if>
+	</where>
+	order by status_0_1 desc,tid desc
+	limit #{turnPage.startNum},#{turnPage.rowInOnePage}
+	</select>
+	
+	
+	<select id="queryCountUserPagejiuye" parameterType="map" resultType="long">
+	select count(tid) from  jiuye
+	<where> 
+	
+	<if test="title!=null and title!=''">
+	and title=#{title}  
+	</if>
+	</where>
+	order by status_0_1 desc,tid desc
+	</select>
+
+<select id="selectjiuye" parameterType="map" resultType="map">
+                 select 
+	                 *
+                 from 
+                   jiuye
+                 <where>
+                 	<if test="title != null and title != ''">
+                 	   and title=#{title}
+                 	</if>                
+                 	 
+                 </where> 
+                 order by 
+                 	status_0_1 desc,tid desc            
+                 limit 
+                 	#{firstPage}, 
+                 	#{rows}; 
+         </select>
+
+<select id="getjiuyeTotal" parameterType="map" resultType="Long">
+                select count(tid) from jiuye
+                <where>
+                 	<if test="title != null and title != ''">
+                 	   and title=#{title}
+                 	</if>  
+                </where>
+         </select>
+         
+ <update id="updateOnejiuye">
+              update jiuye 
+              <set>
+              		<if test="title != null">
+              		   title = #{title},
+              		</if>
+              		
+              		<if test="connect != null">
+              		   	connect = #{connect},
+              		</if>
+              		<if test="aid != null">
+              		   	aid = #{aid}
+              		</if>                		
+              </set> 
+	              where 
+	              	tid = #{tid}
+         </update>
+
+<delete id="deletejiuye" parameterType="List">
+         		delete from jiuye where tid in
+         		<foreach collection="list" item="ids" open="(" separator="," close=")">
+         			#{ids}
+         		</foreach>
+         </delete>
+
+<update id="updatejiuyeStatus_0_1"  parameterType="List">
+		update jiuye
+		<set>
+			<if test="_parameter != null">
+				status_0_1 = 1,
+			</if>
+			<if test="toptime = '' ">
+			toptime = NOW(),
+			</if> 
+		</set>
+		where tid in
+		<foreach collection="list" item="ids" open="(" separator="," close=")">
+         			#{ids}
+         		</foreach>
+	</update>
+
+	<update id="updatejiuyeStatus_1_0" parameterType="List">
+		update jiuye
+		<set>
+			<if test="_parameter != null">
+				status_0_1 = 0,
+			</if>
+			<if test="toptime = '' ">
+			toptime = 0,
+			</if> 
+		</set>
+		where tid in
+		<foreach collection="list" item="ids" open="(" separator="," close=")">
+         			#{ids}
+         		</foreach>
+	</update>
+
+<select id="selectOnejiuye" parameterType="String" resultType="com.jyb.pojo.jiuye">
+               select jiuye.*, admin.name aname from jiuye, admin where jiuye.tid = #{tid} and jiuye.aid = admin.aid
+</select>	
+	
+
+
+<update id="updateadmin" parameterType="List">
+  
+         		update admin set status="3" where aid in
+         		<foreach collection="list" item="ids" open="(" separator="," close=")">
+         			#{ids}
+         		</foreach>
+         
+</update>
+<update id="updateadminquxiao" parameterType="List">
+  
+         		update admin set status="2" where aid in
+         		<foreach collection="list" item="ids" open="(" separator="," close=")">
+         			#{ids}
+         		</foreach>
+         
+</update>
+<delete id="deleteadmin" parameterType="List">
+         		delete from admin where aid in
+         		<foreach collection="list" item="ids" open="(" separator="," close=")">
+         			#{ids}
+         		</foreach>
+ </delete>
+
+
+
+  <select id="selectsetadmin" parameterType="map" resultType="map">
+                 select 
+	                 *
+                 from 
+                   admin 
+                 <where>
+                 	<if test="name != null and name != ''">
+                 	   and name =#{name}                 	
+                 	   </if>                
+                 and status="2"
+                 </where> 
+                 order by 
+                 	aid desc            
+                 limit 
+                 	#{firstPage}, 
+                 	#{rows}; 
+</select>
+
+<select id="selectadmin" resultType="map">
+select * from admin where name=#{name}
+</select>
+
+<insert id="insertadmin" parameterType="map">
+insert into admin(aid,name,password,email,phone,status)values(
+#{aid},
+#{name},
+#{password},
+#{email},
+#{phone},
+#{status}
+)
+</insert>
+
+<select id="selectjiuyeLike" parameterType="map" resultType="map">
+         		select * from jiuye 
+         		<where>
+         				
+         				<if test="title != null and title != ''">
+         					and title like concat('%',#{title},'%')
+         				</if>
+         		</where>
+         		order by status_0_1 desc,tid desc
+	            limit 0,10
+         </select>
+
+
+
+
+</mapper>
